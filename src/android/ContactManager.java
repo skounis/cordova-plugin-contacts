@@ -6,9 +6,7 @@
        to you under the Apache License, Version 2.0 (the
        "License"); you may not use this file except in compliance
        with the License.  You may obtain a copy of the License at
-
          http://www.apache.org/licenses/LICENSE-2.0
-
        Unless required by applicable law or agreed to in writing,
        software distributed under the License is distributed on an
        "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -130,7 +128,7 @@ public class ContactManager extends CordovaPlugin {
             }
         }
         else if (action.equals("save")) {
-            if(PermissionHelper.hasPermission(this, WRITE))
+            if(PermissionHelper.hasPermission(this, WRITE) && PermissionHelper.hasPermission(this, READ))
             {
                 save(executeArgs);
             }
@@ -140,7 +138,7 @@ public class ContactManager extends CordovaPlugin {
             }
         }
         else if (action.equals("remove")) {
-            if(PermissionHelper.hasPermission(this, WRITE))
+            if(PermissionHelper.hasPermission(this, WRITE) && PermissionHelper.hasPermission(this, READ))
             {
                 remove(executeArgs);
             }
@@ -283,10 +281,12 @@ public class ContactManager extends CordovaPlugin {
                 search(executeArgs);
                 break;
             case SAVE_REQ_CODE:
-                save(executeArgs);
+                if (!PermissionHelper.hasPermission(this, READ)) getReadPermission(SAVE_REQ_CODE);
+                else save(executeArgs);
                 break;
             case REMOVE_REQ_CODE:
-                remove(executeArgs);
+                if (!PermissionHelper.hasPermission(this, READ)) getReadPermission(REMOVE_REQ_CODE);
+                else remove(executeArgs);
                 break;
             case PICK_REQ_CODE:
                 pickContactAsync();
